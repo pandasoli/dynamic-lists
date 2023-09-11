@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "dynamic_list.h"
-#include "immutable_list.h"
+#include "../dynamic_list.h"
+#include "../immutable_list.h"
 
 
 typedef struct {
@@ -29,34 +29,29 @@ int main(void) {
     if (res == -1) return 1;
 
     list = dlist->to_immutable(dlist);
-
-    res = dlist->free(dlist);
-    if (res == -1) return 1;
+    dlist->free(dlist);
   }
 
+  printf("From immutable list\n");
   for (int i = 0; i < list->size; i++) {
-    Person item;
-    res = list->get(list, i, &item);
+    const Person *item = list->at(list, i);
     if (res == -1) return 1;
 
-    printf("%s\n", item.name);
+    printf("%s\n", item->name);
   }
 
   struct DynamicList *dlist = list->to_dynamic(list);
+  list->free(list);
 
-  res = list->free(list);
-  if (res == -1) return 1;
-
+  printf("\nFrom dynamic list\n");
   for (int i = 0; i < dlist->size; i++) {
-    Person item;
-    res = dlist->get(dlist, i, &item);
+    Person *item = dlist->at(dlist, i);
     if (res == -1) return 1;
 
-    printf("%s\n", item.name);
+    printf("%s\n", item->name);
   }
 
-  res = dlist->free(dlist);
-  if (res == -1) return 1;
+  dlist->free(dlist);
 
   return 0;
 }

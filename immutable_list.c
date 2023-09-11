@@ -6,53 +6,35 @@
 #include "immutable_list.h"
 
 
-int ImmutableList_get(const struct ImmutableList *self, const size_t i, void *res) {
-  if (self == NULL || res == NULL || i >= self->size)
-    return -1;
-
-  const void *source = self->data + (i * self->item_size);
-  memcpy(res, source, self->item_size);
-
-  return 0;
+const void *ImmutableList_at(const struct ImmutableList *self, const size_t i) {
+  return self->data + (i * self->item_size);
 }
 
-int ImmutableList_free(struct ImmutableList *self) {
-  if (self == NULL)
-    return -1;
-
+void ImmutableList_free(struct ImmutableList *self) {
   free(self);
-
-  return 0;
 }
 
 struct DynamicList *ImmutableList_to_dynamic(const struct ImmutableList *self) {
   struct DynamicList *res = NewDynamicList(self->item_size, self->size);
 
-  for (int i = 0; i < self->size; i++) {
-    void *item = NULL;
-    self->get(self, i, item);
-    res->append(res, item);
-  }
+  res->data = self->data;
+  res->size = self->size;
 
   return res;
 }
 
 
-struct ImmutableList *NewImmutableList(const void *data, const size_t item_size, const size_t size) {
-  struct ImmutableList list = {
-    data,
-    item_size,
-    size,
+struct ImmutableList *NewImmutableList(void *data, const size_t item_size, const size_t size) {
+  struct ImmutableList *res = malloc(sizeof(struct ImmutableList));
 
-    &ImmutableList_get,
-    &ImmutableList_free,
+  res->data = data;
 
-    &ImmutableList_to_dynamic
-  };
+  res->item_size = item_size;
+  res->size = size;
 
-  const size_t listsize = sizeof(struct ImmutableList);
-  struct ImmutableList *res = malloc(listsize);
-  memcpy(res, &list, listsize);
+  res->at = &ImmutableList_at;
+  res->free = &ImmutableList_free,
+  res->to_dynamic = &ImmutableList_to_dynamic;
 
   return res;
 }

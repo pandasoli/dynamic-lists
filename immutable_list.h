@@ -4,15 +4,15 @@
 
 
 struct ImmutableList {
-  const void *data;
+  void *data;
 
-  const size_t item_size;
-  const size_t size;
+  size_t item_size;
+  size_t size;
 
-  int (*get)(const struct ImmutableList *self, const size_t i, void *res);
-  int (*free)(struct ImmutableList *self);
+  const void *(*at)(const struct ImmutableList *self, const size_t i);
+  void (*free)(struct ImmutableList *self);
 
   struct DynamicList *(*to_dynamic)(const struct ImmutableList *self);
 };
 
-struct ImmutableList *NewImmutableList(const void *data, const size_t item_size, const size_t size);
+struct ImmutableList *NewImmutableList(void *data, const size_t item_size, const size_t size);

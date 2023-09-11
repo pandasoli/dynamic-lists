@@ -7,9 +7,6 @@
 
 
 int DynamicList_append(struct DynamicList *self, const void *item) {
-  if (self == NULL || item == NULL)
-    return -1;
-
   if (self->size >= self->capacity) {
     unsigned new_capacity = self->capacity * 2;
     void *new_data = realloc(self->data, self->item_size * new_capacity);
@@ -28,23 +25,12 @@ int DynamicList_append(struct DynamicList *self, const void *item) {
   return 0;
 }
 
-int DynamicList_get(const struct DynamicList *self, const size_t i, void *res) {
-  if (self == NULL || res == NULL || i >= self->size)
-    return -1;
-
-  void *source = self->data + (i * self->item_size);
-  memcpy(res, source, self->item_size);
-
-  return 0;
+void *DynamicList_at(const struct DynamicList *self, const size_t i) {
+  return self->data + (i * self->item_size);
 }
 
-int DynamicList_free(struct DynamicList *self) {
-  if (self == NULL)
-    return -1;
-
+void DynamicList_free(struct DynamicList *self) {
   free(self);
-
-  return 0;
 }
 
 struct ImmutableList *DynamicList_to_immutable(const struct DynamicList *self) {
@@ -65,7 +51,7 @@ struct DynamicList *NewDynamicList(const size_t item_size, const size_t init_cap
   res->size = 0;
   res->capacity = init_capacity;
 
-  res->get = &DynamicList_get;
+  res->at = &DynamicList_at;
   res->append = &DynamicList_append;
   res->free = &DynamicList_free;
   res->to_immutable = &DynamicList_to_immutable;

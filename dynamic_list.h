@@ -11,8 +11,8 @@ struct DynamicList {
   size_t capacity;
 
   int (*append)(struct DynamicList *self, const void *item);
-  int (*get)(const struct DynamicList *self, const size_t i, void *res);
-  int (*free)(struct DynamicList *self);
+  void *(*at)(const struct DynamicList *self, const size_t i);
+  void (*free)(struct DynamicList *self);
   
   struct ImmutableList *(*to_immutable)(const struct DynamicList *self);
 };
