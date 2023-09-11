@@ -29,7 +29,7 @@ struct DynamicList *ImmutableList_to_dynamic(const struct ImmutableList *self) {
   struct DynamicList *res = NewDynamicList(self->item_size, self->size);
 
   for (int i = 0; i < self->size; i++) {
-    void *item;
+    void *item = NULL;
     self->get(self, i, item);
     res->append(res, item);
   }
