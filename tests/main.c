@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "../dynamic_list.h"
-#include "../immutable_list.h"
+#include "dynamic_list.h"
+#include "immutable_list.h"
 
 
 typedef struct {
