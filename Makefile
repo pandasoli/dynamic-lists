@@ -16,10 +16,11 @@ CFLAGS = -g -O3 -Wall -I$(INC_DIR)
 
 # targets
 
-.PHONY: all tests clean
+.PHONY: all lib tests clean
 
-all: $(LIB) tests
+all: lib tests
 
+lib: $(LIB)
 tests: $(TESTS:$(TEST_DIR)/%.c=$(BIN_DIR)/$(TEST_DIR)/%)
 
 clean:
